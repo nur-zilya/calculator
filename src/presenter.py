@@ -27,6 +27,18 @@ class CalculatorPresenter:
         self.view.set_button_callback(self.view.button_sub, lambda: self.view.insert_text('-'))
         self.view.set_button_callback(self.view.button_mult, lambda: self.view.insert_text('*'))
         self.view.set_button_callback(self.view.button_div, lambda: self.view.insert_text('/'))
+        self.view.set_button_callback(self.view.button_pow, lambda: self.view.insert_text('^'))
+
+        self.view.set_button_callback(self.view.button_cos, lambda: self.view.insert_text('cos('))
+        self.view.set_button_callback(self.view.button_sin, lambda: self.view.insert_text('sin('))
+        self.view.set_button_callback(self.view.button_tan, lambda: self.view.insert_text('tan('))
+        self.view.set_button_callback(self.view.button_acos, lambda: self.view.insert_text('acos('))
+        self.view.set_button_callback(self.view.button_asin, lambda: self.view.insert_text('asin('))
+        self.view.set_button_callback(self.view.button_atan, lambda: self.view.insert_text('atan('))
+        self.view.set_button_callback(self.view.button_sqrt, lambda: self.view.insert_text('sqrt('))
+        self.view.set_button_callback(self.view.button_ln, lambda: self.view.insert_text('ln('))
+        self.view.set_button_callback(self.view.button_log, lambda: self.view.insert_text('log('))
+
         self.view.set_button_callback(self.view.button_clear, self.view.clear_entry)
         self.view.set_button_callback(self.view.button_calculate, self.calculate)
 

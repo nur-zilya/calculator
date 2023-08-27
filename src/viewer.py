@@ -130,31 +130,56 @@ class CalculatorView(QWidget):
         self.button_sub = QPushButton(text='-')
         self.button_mult = QPushButton(text='*')
         self.button_div = QPushButton(text='/')
+        self.button_pow = QPushButton(text='^')
+
+        self.button_cos = QPushButton(text='cos(x)')
+        self.button_sin = QPushButton(text='sin(x)')
+        self.button_tan = QPushButton(text='tan(x)')
+        self.button_acos = QPushButton(text='acos(x)')
+        self.button_asin = QPushButton(text='asin(x)')
+        self.button_atan = QPushButton(text='atan(x)')
+        self.button_sqrt = QPushButton(text='sqrt(x)')
+        self.button_ln = QPushButton(text='ln(x)')
+        self.button_log = QPushButton(text='log(x)')
+
+
         self.button_clear =QPushButton(text='C')
         self.button_calculate = QPushButton(text='=')
 
-        self.button_layout.addWidget(self.button1, 0, 0)
-        self.button_layout.addWidget(self.button1, 0, 0)
-        self.button_layout.addWidget(self.button2, 0, 1)
-        self.button_layout.addWidget(self.button3, 0, 2)
-        self.button_layout.addWidget(self.button4, 1, 0)
-        self.button_layout.addWidget(self.button5, 1, 1)
-        self.button_layout.addWidget(self.button6, 1, 2)
-        self.button_layout.addWidget(self.button7, 2, 0)
-        self.button_layout.addWidget(self.button8, 2, 1)
-        self.button_layout.addWidget(self.button9, 2, 2)
-        self.button_layout.addWidget(self.button0, 3, 0)
-        self.button_layout.addWidget(self.button_dot, 3, 1)
-        self.button_layout.addWidget(self.button_op, 4, 0)
-        self.button_layout.addWidget(self.button_cp, 4, 1)
+        # ...
 
-        self.button_layout.addWidget(self.button_add, 1, 3)
-        self.button_layout.addWidget(self.button_sub, 2, 3)
-        self.button_layout.addWidget(self.button_mult, 3, 3)
-        self.button_layout.addWidget(self.button_div, 3, 2)
+        self.button_layout.addWidget(self.button1, 1, 0)
+        self.button_layout.addWidget(self.button2, 1, 1)
+        self.button_layout.addWidget(self.button3, 1, 2)
+        self.button_layout.addWidget(self.button4, 2, 0)
+        self.button_layout.addWidget(self.button5, 2, 1)
+        self.button_layout.addWidget(self.button6, 2, 2)
+        self.button_layout.addWidget(self.button7, 3, 0)
+        self.button_layout.addWidget(self.button8, 3, 1)
+        self.button_layout.addWidget(self.button9, 3, 2)
+        self.button_layout.addWidget(self.button0, 4, 1)
 
-        self.button_layout.addWidget(self.button_clear, 0, 3)
-        self.button_layout.addWidget(self.button_calculate, 4, 2, 1, 2)
+        self.button_layout.addWidget(self.button_dot, 4, 0)
+        self.button_layout.addWidget(self.button_op, 5, 0)
+        self.button_layout.addWidget(self.button_cp, 5, 1)
+        self.button_layout.addWidget(self.button_pow, 5, 2)
+
+        # ...
+
+        self.button_layout.addWidget(self.button_cos, 6, 0)
+        self.button_layout.addWidget(self.button_sin, 6, 1)
+        self.button_layout.addWidget(self.button_tan, 6, 2)
+        self.button_layout.addWidget(self.button_acos, 7, 0)
+        self.button_layout.addWidget(self.button_asin, 7, 1)
+        self.button_layout.addWidget(self.button_atan, 7, 2)
+        self.button_layout.addWidget(self.button_sqrt, 8, 0)
+        self.button_layout.addWidget(self.button_ln, 8, 1)
+        self.button_layout.addWidget(self.button_log, 8, 2)
+
+        # ...
+
+        self.button_layout.addWidget(self.button_clear, 9, 0, 9, 2)
+        self.button_layout.addWidget(self.button_calculate, 4, 2)
 
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
@@ -163,7 +188,11 @@ class CalculatorView(QWidget):
         button.clicked.connect(callback)
 
     def insert_text(self, text):
-        self.entryBox.insert(text)
+        if text == '^':
+            self.entryBox.insert('**')
+        else:
+            self.entryBox.insert(text)
+
 
     def clear_entry(self):
         self.entryBox.clear()
