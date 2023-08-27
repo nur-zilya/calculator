@@ -7,6 +7,7 @@ class CalculatorPresenter:
     def __init__(self, model, view):
         self.model = model
         self.view = view
+        self.notation = "infix"
 
         self.view.set_button_callback(self.view.button1, lambda: self.view.insert_text('1'))
         self.view.set_button_callback(self.view.button2, lambda: self.view.insert_text('2'))
@@ -42,14 +43,41 @@ class CalculatorPresenter:
         self.view.set_button_callback(self.view.button_clear, self.view.clear_entry)
         self.view.set_button_callback(self.view.button_calculate, self.calculate)
 
+    def set_notation(self, notation):
+        self.notation = notation
+
+    def get_notation(self):
+        return self.notation
+
     def calculate(self):
         expression = self.view.get_expression()
+        notation = self.view.get_notation()
         try:
             if expression:
-                result = self.model.calculate_expression(expression)
+                if notation == "prefix":
+                    expression = expression.replace(" ", "")  # Remove spaces from prefix expression
+                    expression = self.convert_prefix(expression)  # Convert to space-separated prefix
+                result = self.model.calculate_expression(expression, notation)
                 self.view.set_result(f"{expression} = {result}")
         except:
             self.view.set_result('Incorrect expression')
+
+    def convert_prefix(self, expression):
+        # Convert the input prefix expression to space-separated format
+        tokens = []
+        i = 0
+        while i < len(expression):
+            if expression[i] in "+-*/^()":
+                tokens.append(expression[i])
+                i += 1
+            else:
+                j = i
+                while j < len(expression) and expression[j] not in "+-*/^()":
+                    j += 1
+                tokens.append(expression[i:j])
+                i = j
+        return " ".join(tokens)
+
 
 
 app = QApplication([])

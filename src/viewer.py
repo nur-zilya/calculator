@@ -1,97 +1,4 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget
-#
-#
-# class Main(QWidget):
-#     def __init__(self):
-#         super().__init__()
-#         self.setWindowTitle('Calculator')
-#         self.resize(300, 500)
-#         self.show()
-#         self.setStyleSheet('QWidget {background: #333; font-size: 20px;}')
-#
-#         main_layout = QVBoxLayout()
-#         button_layout = QGridLayout()
-#
-#         self.historyBox = QListWidget()
-#         self.entryBox = QLineEdit()
-#         self.entryBox.setStyleSheet('color:white;')
-#
-#         main_layout.addWidget(self.historyBox)
-#         main_layout.addWidget(self.entryBox)
-#
-#         button1 = QPushButton(text='1', clicked=lambda:self.insertNum('1'))
-#         button2 = QPushButton(text='2', clicked=lambda: self.insertNum('2'))
-#         button3 = QPushButton(text='3', clicked=lambda: self.insertNum('3'))
-#         button4 = QPushButton(text='4', clicked=lambda: self.insertNum('4'))
-#         button5 = QPushButton(text='5', clicked=lambda: self.insertNum('5'))
-#         button6 = QPushButton(text='6', clicked=lambda: self.insertNum('6'))
-#         button7 = QPushButton(text='7', clicked=lambda: self.insertNum('7'))
-#         button8 = QPushButton(text='8', clicked=lambda: self.insertNum('8'))
-#         button9 = QPushButton(text='9', clicked=lambda: self.insertNum('9'))
-#         button0 = QPushButton(text='0', clicked=lambda: self.insertNum('0'))
-#
-#         button_dot = QPushButton(text='.', clicked=lambda: self.insertNum('.'))
-#         button_op = QPushButton(text='(', clicked=lambda: self.insertNum('('))
-#         button_cp = QPushButton(text=')', clicked=lambda: self.insertNum(')'))
-#
-#         button_add = QPushButton(text='+', clicked=lambda: self.insertNum('+'))
-#         button_sub = QPushButton(text='-', clicked=lambda: self.insertNum('-'))
-#         button_mult = QPushButton(text='*', clicked=lambda: self.insertNum('*'))
-#         button_div = QPushButton(text='/', clicked=lambda: self.insertNum('/'))
-#         button_clear =QPushButton(text='C', clicked=self.clear_items)
-#         button_calculate = QPushButton(text='=', clicked=self.calculate)
-#
-#         button_layout.addWidget(button1, 0, 0)
-#         button_layout.addWidget(button1, 0, 0)
-#         button_layout.addWidget(button2, 0, 1)
-#         button_layout.addWidget(button3, 0, 2)
-#         button_layout.addWidget(button4, 1, 0)
-#         button_layout.addWidget(button5, 1, 1)
-#         button_layout.addWidget(button6, 1, 2)
-#         button_layout.addWidget(button7, 2, 0)
-#         button_layout.addWidget(button8, 2, 1)
-#         button_layout.addWidget(button9, 2, 2)
-#         button_layout.addWidget(button0, 3, 0)
-#         button_layout.addWidget(button_dot, 3, 1)
-#         button_layout.addWidget(button_op, 4, 0)
-#         button_layout.addWidget(button_cp, 4, 1)
-#
-#         button_layout.addWidget(button_add, 1, 3)
-#         button_layout.addWidget(button_sub, 2, 3)
-#         button_layout.addWidget(button_mult, 3, 3)
-#         button_layout.addWidget(button_div, 3, 2)
-#
-#         button_layout.addWidget(button_clear, 0, 3)
-#         button_layout.addWidget(button_calculate, 4, 2, 1, 2)
-#
-#         main_layout.addLayout(button_layout)
-#         self.setLayout(main_layout)
-#
-#     def insertNum(self, num):
-#         self.entryBox.insert(num)
-#
-#     def clear_items(self):
-#         self.entryBox.clear()
-#
-#     def calculate(self):
-#         items_to_calc = self.entryBox.text()
-#         try:
-#             if items_to_calc:
-#                 items_to_calc = str(items_to_calc)
-#                 res = eval(items_to_calc)
-#                 self.entryBox.setText(str(res))
-#                 self.historyBox.addItem(f"{items_to_calc}={res}")
-#         except:
-#             self.entryBox.setText('Incorrect expression')
-#
-#
-#
-#
-# app = QApplication([])
-# app.setStyle('fusion')
-# main = Main()
-# app.exec_()
-
 
 class CalculatorView(QWidget):
     def __init__(self):
@@ -99,6 +6,8 @@ class CalculatorView(QWidget):
         self.setWindowTitle('Calculator')
         self.resize(300, 500)
         self.setStyleSheet('QWidget {background: #333; font-size: 20px;}')
+
+        self.notation = "infix"
 
         self.main_layout = QVBoxLayout()
         self.button_layout = QGridLayout()
@@ -142,11 +51,12 @@ class CalculatorView(QWidget):
         self.button_ln = QPushButton(text='ln(x)')
         self.button_log = QPushButton(text='log(x)')
 
+        self.button_infix = QPushButton(text='Infix')
+        self.button_prefix = QPushButton(text='Prefix')
+        self.button_postfix = QPushButton(text='Postfix')
 
         self.button_clear =QPushButton(text='C')
         self.button_calculate = QPushButton(text='=')
-
-        # ...
 
         self.button_layout.addWidget(self.button1, 1, 0)
         self.button_layout.addWidget(self.button2, 1, 1)
@@ -164,7 +74,10 @@ class CalculatorView(QWidget):
         self.button_layout.addWidget(self.button_cp, 5, 1)
         self.button_layout.addWidget(self.button_pow, 5, 2)
 
-        # ...
+        self.button_layout.addWidget(self.button_add, 1, 4)
+        self.button_layout.addWidget(self.button_sub, 2, 4)
+        self.button_layout.addWidget(self.button_mult, 3, 4)
+        self.button_layout.addWidget(self.button_div, 4, 4)
 
         self.button_layout.addWidget(self.button_cos, 6, 0)
         self.button_layout.addWidget(self.button_sin, 6, 1)
@@ -176,13 +89,25 @@ class CalculatorView(QWidget):
         self.button_layout.addWidget(self.button_ln, 8, 1)
         self.button_layout.addWidget(self.button_log, 8, 2)
 
-        # ...
-
-        self.button_layout.addWidget(self.button_clear, 9, 0, 9, 2)
+        self.button_layout.addWidget(self.button_clear, 5, 4)
         self.button_layout.addWidget(self.button_calculate, 4, 2)
+
+        self.button_layout.addWidget(self.button_infix, 6, 4)
+        self.button_layout.addWidget(self.button_prefix, 7, 4)
+        self.button_layout.addWidget(self.button_postfix, 8, 4)
+
+        self.set_button_callback(self.button_infix, lambda: self.set_notation("infix"))
+        self.set_button_callback(self.button_prefix, lambda: self.set_notation("prefix"))
+        self.set_button_callback(self.button_postfix, lambda: self.set_notation("postfix"))
 
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
+
+    def set_notation(self, notation):
+        self.notation = notation
+
+    def get_notation(self):
+        return self.notation
 
     def set_button_callback(self, button, callback):
         button.clicked.connect(callback)
@@ -192,7 +117,6 @@ class CalculatorView(QWidget):
             self.entryBox.insert('**')
         else:
             self.entryBox.insert(text)
-
 
     def clear_entry(self):
         self.entryBox.clear()
