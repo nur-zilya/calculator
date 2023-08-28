@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget
-from model import CalculatorModel
+from model import CalculatorModel, init_db
 from viewer import CalculatorView
-
+import sqlite3
 
 class CalculatorPresenter:
     def __init__(self, model, view):
@@ -42,6 +42,10 @@ class CalculatorPresenter:
         self.view.set_button_callback(self.view.button_clear, self.view.clear_entry)
         self.view.set_button_callback(self.view.button_calculate, self.calculate)
 
+        self.view.set_button_callback(self.view.button_clear_history, self.view.clear_history_box)
+        self.view.set_button_callback(self.view.button_load_history, self.load_hist)
+
+
     def calculate(self):
         expression = self.view.get_expression()
         try:
@@ -54,6 +58,7 @@ class CalculatorPresenter:
                         self.view.set_result('Result is out of range')
                     else:
                         self.view.set_result(f"{expression} = {result}")
+                        self.model.add_record_to_db(expression, result)
         except:
             self.view.set_result('Incorrect expression')
 
@@ -80,13 +85,29 @@ class CalculatorPresenter:
         except ValueError:
             return False
 
+    def load_hist(self):
+        records = self.model.load_history_db()
+        for expression, result in records:
+            view.historyBox.addItem(f"{expression} = {result}")
 
-app = QApplication([])
-app.setStyle('fusion')
 
-model = CalculatorModel()
-view = CalculatorView()
-presenter = CalculatorPresenter(model, view)
+if __name__ == '__main__':
+    init_db()
+    app = QApplication([])
+    app.setStyle('fusion')
 
-view.show()
-app.exec_()
+    model = CalculatorModel()
+    view = CalculatorView()
+    presenter = CalculatorPresenter(model, view)
+
+    # Load history from the database and populate the historyBox
+    # with sqlite3.connect('calculator.db') as conn:
+    #     cursor = conn.cursor()
+    #     cursor.execute("SELECT expression, result FROM history")
+    #     history_records = cursor.fetchall()
+    #     for record in history_records:
+    #         expression, result = record
+    #         view.historyBox.addItem(f"{expression} = {result}")
+
+    view.show()
+    app.exec_()

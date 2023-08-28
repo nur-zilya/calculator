@@ -54,6 +54,9 @@ class CalculatorView(QWidget):
         self.button_clear =QPushButton(text='C')
         self.button_calculate = QPushButton(text='=')
 
+        self.button_clear_history = QPushButton(text='Clear History')
+        self.button_load_history = QPushButton(text='Load History')
+
         self.button_layout.addWidget(self.button1, 1, 0)
         self.button_layout.addWidget(self.button2, 1, 1)
         self.button_layout.addWidget(self.button3, 1, 2)
@@ -88,11 +91,15 @@ class CalculatorView(QWidget):
         self.button_layout.addWidget(self.button_clear, 5, 4)
         self.button_layout.addWidget(self.button_calculate, 4, 2)
 
+        self.button_layout.addWidget(self.button_clear_history, 6, 4)
+        self.button_layout.addWidget(self.button_load_history, 7, 4)
+
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
 
     def set_button_callback(self, button, callback):
         button.clicked.connect(callback)
+
 
     def insert_text(self, text):
         if text == '^':
@@ -109,3 +116,7 @@ class CalculatorView(QWidget):
     def set_result(self, result):
         self.entryBox.setText(result)
         self.historyBox.addItem(result)
+
+    def clear_history_box(self):
+        self.historyBox.clear()
+

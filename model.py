@@ -1,4 +1,5 @@
 import math
+import sqlite3
 
 class CalculatorModel:
     def calculate_expression(self, expression):
@@ -28,3 +29,35 @@ class CalculatorModel:
             return 'Division by zero'
         except:
             return 'Error'
+
+    def add_record_to_db(self, expression, result):
+        with sqlite3.connect('calculator.db') as conn:
+            cursor = conn.cursor()
+            query = "INSERT INTO `history` (expression, result) VALUES (?, ?)"
+            cursor.execute(query, (expression, result))
+            conn.commit()
+
+    def clear_history_db(self):
+        with sqlite3.connect('calculator.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM `history`;")
+            conn.commit()
+
+    def load_history_db(self):
+        with sqlite3.connect('calculator.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT expression, result FROM `history`")
+            history_records = cursor.fetchall()
+            return history_records
+
+
+def init_db():
+    with sqlite3.connect('calculator.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS `history` (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            expression VARCHAR(255),
+            result VARCHAR
+            );
+        """)
