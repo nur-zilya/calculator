@@ -7,7 +7,6 @@ class CalculatorPresenter:
     def __init__(self, model, view):
         self.model = model
         self.view = view
-        self.notation = "infix"
 
         self.view.set_button_callback(self.view.button1, lambda: self.view.insert_text('1'))
         self.view.set_button_callback(self.view.button2, lambda: self.view.insert_text('2'))
@@ -43,41 +42,43 @@ class CalculatorPresenter:
         self.view.set_button_callback(self.view.button_clear, self.view.clear_entry)
         self.view.set_button_callback(self.view.button_calculate, self.calculate)
 
-    def set_notation(self, notation):
-        self.notation = notation
-
-    def get_notation(self):
-        return self.notation
-
     def calculate(self):
         expression = self.view.get_expression()
-        notation = self.view.get_notation()
         try:
             if expression:
-                if notation == "prefix":
-                    expression = expression.replace(" ", "")  # Remove spaces from prefix expression
-                    expression = self.convert_prefix(expression)  # Convert to space-separated prefix
-                result = self.model.calculate_expression(expression, notation)
-                self.view.set_result(f"{expression} = {result}")
+                if self.has_invalid_input(expression):
+                    self.view.set_result('Input out of range for trigonometric functions')
+                else:
+                    result = self.model.calculate_expression(expression)
+                    if not self.is_within_range(result):
+                        self.view.set_result('Result is out of range')
+                    else:
+                        self.view.set_result(f"{expression} = {result}")
         except:
             self.view.set_result('Incorrect expression')
 
-    def convert_prefix(self, expression):
-        # Convert the input prefix expression to space-separated format
-        tokens = []
-        i = 0
-        while i < len(expression):
-            if expression[i] in "+-*/^()":
-                tokens.append(expression[i])
-                i += 1
-            else:
-                j = i
-                while j < len(expression) and expression[j] not in "+-*/^()":
-                    j += 1
-                tokens.append(expression[i:j])
-                i = j
-        return " ".join(tokens)
+    def has_invalid_input(self, expression):
+        trig_functions = ['cos', 'sin', 'tan', 'acos', 'asin', 'atan']
+        for func in trig_functions:
+            if func in expression:
+                start = expression.find(func) + len(func)
+                end = expression.find(')', start)
+                if start != -1 and end != -1:
+                    value = expression[start:end]
+                    try:
+                        value = float(value)
+                        if not (-1000000 <= value <= 1000000):
+                            return True
+                    except ValueError:
+                        return True
+        return False
 
+    def is_within_range(self, result):
+        try:
+            result_value = float(result)
+            return -1000000 <= result_value <= 1000000
+        except ValueError:
+            return False
 
 
 app = QApplication([])

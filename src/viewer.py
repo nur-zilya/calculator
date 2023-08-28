@@ -7,14 +7,14 @@ class CalculatorView(QWidget):
         self.resize(300, 500)
         self.setStyleSheet('QWidget {background: #333; font-size: 20px;}')
 
-        self.notation = "infix"
-
         self.main_layout = QVBoxLayout()
         self.button_layout = QGridLayout()
 
         self.historyBox = QListWidget()
         self.entryBox = QLineEdit()
         self.entryBox.setStyleSheet('color:white;')
+
+        self.entryBox.setMaxLength(255)
 
         self.main_layout.addWidget(self.historyBox)
         self.main_layout.addWidget(self.entryBox)
@@ -50,10 +50,6 @@ class CalculatorView(QWidget):
         self.button_sqrt = QPushButton(text='sqrt(x)')
         self.button_ln = QPushButton(text='ln(x)')
         self.button_log = QPushButton(text='log(x)')
-
-        self.button_infix = QPushButton(text='Infix')
-        self.button_prefix = QPushButton(text='Prefix')
-        self.button_postfix = QPushButton(text='Postfix')
 
         self.button_clear =QPushButton(text='C')
         self.button_calculate = QPushButton(text='=')
@@ -92,22 +88,8 @@ class CalculatorView(QWidget):
         self.button_layout.addWidget(self.button_clear, 5, 4)
         self.button_layout.addWidget(self.button_calculate, 4, 2)
 
-        self.button_layout.addWidget(self.button_infix, 6, 4)
-        self.button_layout.addWidget(self.button_prefix, 7, 4)
-        self.button_layout.addWidget(self.button_postfix, 8, 4)
-
-        self.set_button_callback(self.button_infix, lambda: self.set_notation("infix"))
-        self.set_button_callback(self.button_prefix, lambda: self.set_notation("prefix"))
-        self.set_button_callback(self.button_postfix, lambda: self.set_notation("postfix"))
-
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
-
-    def set_notation(self, notation):
-        self.notation = notation
-
-    def get_notation(self):
-        return self.notation
 
     def set_button_callback(self, button, callback):
         button.clicked.connect(callback)
