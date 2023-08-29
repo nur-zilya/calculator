@@ -1,4 +1,21 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget, QTextBrowser
+
+class HelpWindow(QWidget):
+    def __init__(self, help_text):
+        super().__init__()
+        self.help_text = help_text
+        self.setWindowTitle('Help')
+        self.resize(500, 300)
+        self.setStyleSheet('QWidget {background: #333; font-size: 20px;}')
+
+        layout = QVBoxLayout()
+
+        self.help_browser = QTextBrowser()
+        self.help_browser.setPlainText(help_text)
+
+        layout.addWidget(self.help_browser)
+        self.setLayout(layout)
+
 
 class CalculatorView(QWidget):
     def __init__(self):
@@ -56,6 +73,7 @@ class CalculatorView(QWidget):
 
         self.button_clear_history = QPushButton(text='Clear History')
         self.button_load_history = QPushButton(text='Load History')
+        self.button_help = QPushButton(text='HELP')
 
         self.button_layout.addWidget(self.button1, 1, 0)
         self.button_layout.addWidget(self.button2, 1, 1)
@@ -93,6 +111,7 @@ class CalculatorView(QWidget):
 
         self.button_layout.addWidget(self.button_clear_history, 6, 4)
         self.button_layout.addWidget(self.button_load_history, 7, 4)
+        self.button_layout.addWidget(self.button_help, 8, 4)
 
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
@@ -119,4 +138,12 @@ class CalculatorView(QWidget):
 
     def clear_history_box(self):
         self.historyBox.clear()
+
+    def init_help_window(self, help_text):
+        self.help_window = HelpWindow(help_text)
+
+    def show_help_window(self):
+        if hasattr(self, 'help_window'):
+            self.help_window.show()
+
 

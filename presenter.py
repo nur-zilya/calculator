@@ -44,6 +44,7 @@ class CalculatorPresenter:
 
         self.view.set_button_callback(self.view.button_clear_history, self.view.clear_history_box)
         self.view.set_button_callback(self.view.button_load_history, self.load_hist)
+        self.view.set_button_callback(self.view.button_help, self.view.show_help_window)
 
 
     def calculate(self):
@@ -100,14 +101,46 @@ if __name__ == '__main__':
     view = CalculatorView()
     presenter = CalculatorPresenter(model, view)
 
-    # Load history from the database and populate the historyBox
-    # with sqlite3.connect('calculator.db') as conn:
-    #     cursor = conn.cursor()
-    #     cursor.execute("SELECT expression, result FROM history")
-    #     history_records = cursor.fetchall()
-    #     for record in history_records:
-    #         expression, result = record
-    #         view.historyBox.addItem(f"{expression} = {result}")
+    help_text = '''
+        Help Section - Calculator Application
+
+        Welcome to the Calculator Application Help Section! This guide will walk you through the various features and functionalities of the application's interface.
+        
+        1. Expression Entry:
+           - You can enter mathematical expressions using the buttons on the calculator.
+           - Use the numeric buttons (0-9) to input numbers.
+           - Press the "." button to enter a decimal point.
+           - Parentheses can be added with the "(" and ")" buttons.
+           - Basic arithmetic operations like addition (+), subtraction (-), multiplication (*), and division (/) are supported.
+        
+        2. Trigonometric and Other Functions:
+           - You can use trigonometric functions such as cos, sin, tan, acos, asin, atan by pressing the respective buttons.
+           - The "sqrt" button calculates the square root of a number.
+           - "ln" calculates the natural logarithm, and "log" calculates the base-10 logarithm.
+        
+        3. Calculation and Results:
+           - Press the "=" button to calculate the result of the entered expression.
+           - The result will be displayed in the entry box.
+           - If the result is out of the valid range, an appropriate message will be shown.
+        
+        4. History:
+           - The history box displays previously calculated expressions and their results.
+           - You can clear the history using the "Clear History" button.
+        
+        5. Loading History:
+           - Use the "Load History" button to populate the history box with previously saved expressions and results.
+        
+        6. Clearing the Entry:
+           - The "C" button clears the current expression from the entry box.
+        
+        7. Exiting the Application:
+           - To close the application, click the close button (X) on the top-right corner.
+        
+        We hope this guide helps you navigate the Calculator Application effectively. If you have any further questions, please refer to this Help Section or consult the user manual.
+
+    '''
+
+    view.init_help_window(help_text)
 
     view.show()
     app.exec_()
