@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget
-from model import CalculatorModel, init_db
+from model import CalculatorModel
 from viewer import CalculatorView
 import sqlite3
 
@@ -93,12 +93,12 @@ class CalculatorPresenter:
 
 
 if __name__ == '__main__':
-    init_db()
     app = QApplication([])
     app.setStyle('fusion')
 
     model = CalculatorModel()
     view = CalculatorView()
+    model.init_db()
     presenter = CalculatorPresenter(model, view)
 
     help_text = '''

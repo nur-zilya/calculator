@@ -37,12 +37,6 @@ class CalculatorModel:
             cursor.execute(query, (expression, result))
             conn.commit()
 
-    def clear_history_db(self):
-        with sqlite3.connect('calculator.db') as conn:
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM `history`;")
-            conn.commit()
-
     def load_history_db(self):
         with sqlite3.connect('calculator.db') as conn:
             cursor = conn.cursor()
@@ -51,13 +45,13 @@ class CalculatorModel:
             return history_records
 
 
-def init_db():
-    with sqlite3.connect('calculator.db') as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS `history` (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            expression VARCHAR(255),
-            result VARCHAR
-            );
-        """)
+    def init_db(self):
+        with sqlite3.connect('calculator.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS `history` (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                expression VARCHAR(255),
+                result VARCHAR
+                );
+            """)
