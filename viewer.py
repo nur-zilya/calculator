@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget, QTextBrowser
+import configparser
 
 class HelpWindow(QWidget):
     def __init__(self, help_text):
@@ -22,7 +23,7 @@ class CalculatorView(QWidget):
         super().__init__()
         self.setWindowTitle('Calculator')
         self.resize(300, 500)
-        self.setStyleSheet('QWidget {background: #333; font-size: 20px;}')
+        # self.setStyleSheet('QWidget {background: #333; font-size: 20px;}')
 
         self.main_layout = QVBoxLayout()
         self.button_layout = QGridLayout()
@@ -36,6 +37,11 @@ class CalculatorView(QWidget):
         self.main_layout.addWidget(self.historyBox)
         self.main_layout.addWidget(self.entryBox)
         self.setLayout(self.main_layout)
+
+        self.config = configparser.ConfigParser()
+        self.config.read('config.ini')
+
+        self.apply_appearance_settings()
 
         self.button1 = QPushButton(text='1')
         self.button2 = QPushButton(text='2')
@@ -115,6 +121,14 @@ class CalculatorView(QWidget):
 
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
+
+    def apply_appearance_settings(self):
+        background_color = self.config.get('Appearance', 'background_color')
+        font_size = int(self.config.get('Appearance', 'font_size'))
+        font_color = self.config.get('Appearance', 'font_color')
+
+        style = f'QWidget {{background: {background_color}; font-size: {font_size}px; color: {font_color};}}'
+        self.setStyleSheet(style)
 
     def set_button_callback(self, button, callback):
         button.clicked.connect(callback)

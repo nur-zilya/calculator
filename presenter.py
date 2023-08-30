@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPu
 from model import CalculatorModel
 from viewer import CalculatorView
 import sqlite3
+import logging
+from logging.handlers import TimedRotatingFileHandler
 
 class CalculatorPresenter:
     def __init__(self, model, view):
@@ -56,15 +58,18 @@ class CalculatorPresenter:
                 else:
                     result = self.model.calculate_expression(expression)
                     if not self.is_within_range(result):
+                        logger.info('Result is out of range')
                         self.view.set_result('Result is out of range')
                     else:
                         self.view.set_result(f"{expression} = {result}")
                         self.model.add_record_to_db(expression, result)
+                        logger.info(f'{expression} = {result}')
         except:
+            logger.info('Incorrect expression entered')
             self.view.set_result('Incorrect expression')
 
     def has_invalid_input(self, expression):
-        trig_functions = ['cos', 'sin', 'tan', 'acos', 'asin', 'atan']
+        trig_functions = ['cos(', 'sin(', 'tan(', 'acos(', 'asin(', 'atan(']
         for func in trig_functions:
             if func in expression:
                 start = expression.find(func) + len(func)
@@ -73,7 +78,7 @@ class CalculatorPresenter:
                     value = expression[start:end]
                     try:
                         value = float(value)
-                        if not (-1000000 <= value <= 1000000):
+                        if not (float(-1000000) <= value <= float(1000000)):
                             return True
                     except ValueError:
                         return True
@@ -106,41 +111,50 @@ if __name__ == '__main__':
 
         Welcome to the Calculator Application Help Section! This guide will walk you through the various features and functionalities of the application's interface.
         
-        1. Expression Entry:
-           - You can enter mathematical expressions using the buttons on the calculator.
-           - Use the numeric buttons (0-9) to input numbers.
-           - Press the "." button to enter a decimal point.
-           - Parentheses can be added with the "(" and ")" buttons.
-           - Basic arithmetic operations like addition (+), subtraction (-), multiplication (*), and division (/) are supported.
+        1. **Expression Entry:**
+           - Enter mathematical expressions using the calculator buttons.
+           - Use numeric buttons (0-9) for numbers.
+           - Press the "." button for decimals.
+           - Parentheses can be added with "(" and ")" buttons.
+           - Basic arithmetic operations (+, -, *, /) are supported.
         
-        2. Trigonometric and Other Functions:
-           - You can use trigonometric functions such as cos, sin, tan, acos, asin, atan by pressing the respective buttons.
-           - The "sqrt" button calculates the square root of a number.
-           - "ln" calculates the natural logarithm, and "log" calculates the base-10 logarithm.
+        2. **Trigonometric and Other Functions:**
+           - Use trigonometric functions like cos, sin, tan, acos, asin, atan.
+           - Press the "sqrt" button to calculate square roots.
+           - "ln" calculates the natural logarithm, and "log" calculates base-10 logarithms.
         
-        3. Calculation and Results:
-           - Press the "=" button to calculate the result of the entered expression.
-           - The result will be displayed in the entry box.
-           - If the result is out of the valid range, an appropriate message will be shown.
+        3. **Calculation and Results:**
+           - Press "=" to calculate the result.
+           - Result is shown in the entry box.
+           - If the result is out of range, you'll see a message.
         
-        4. History:
-           - The history box displays previously calculated expressions and their results.
-           - You can clear the history using the "Clear History" button.
+        4. **History:**
+           - History box displays previous expressions and results.
+           - Clear history with "Clear History" button.
         
-        5. Loading History:
-           - Use the "Load History" button to populate the history box with previously saved expressions and results.
+        5. **Loading History:**
+           - Use "Load History" to populate the history box with saved expressions.
         
-        6. Clearing the Entry:
-           - The "C" button clears the current expression from the entry box.
+        6. **Clearing the Entry:**
+           - "C" button clears the current expression.
         
-        7. Exiting the Application:
-           - To close the application, click the close button (X) on the top-right corner.
+        7. **Configuration Settings:**
+           - The application allows you to customize its appearance.
+           - Edit the "config.ini" file to change settings like background color and font size, font color.
+           - Parameters in the configuration file: background_color, font_size, font_color.
         
-        We hope this guide helps you navigate the Calculator Application effectively. If you have any further questions, please refer to this Help Section or consult the user manual.
-
+        8. **Exiting the Application:**
+           - Close the application using the close button (X) in the top-right corner.
+        
+        We hope this guide helps you navigate the Calculator Application effectively. If you have questions, refer to this Help Section or the user manual.
     '''
 
     view.init_help_window(help_text)
+    logging.basicConfig(level=logging.INFO, handlers=[
+        TimedRotatingFileHandler('logs/logs', when='midnight', interval=1, backupCount=30)
+    ], format='%(message)s_%(asctime)s', datefmt="%d-%m-%Y-%H-%M-%S")
+    logger = logging.getLogger("actions")
+    logger.info('Calculator is opened')
 
     view.show()
     app.exec_()
