@@ -123,9 +123,14 @@ class CalculatorView(QWidget):
         self.setLayout(self.main_layout)
 
     def apply_appearance_settings(self):
-        background_color = self.config.get('Appearance', 'background_color')
-        font_size = int(self.config.get('Appearance', 'font_size'))
-        font_color = self.config.get('Appearance', 'font_color')
+        try:
+            background_color = self.config.get('Appearance', 'background_color')
+            font_size = self.config.getint('Appearance', 'font_size')
+            font_color = self.config.get('Appearance', 'font_color')
+        except configparser.NoSectionError:
+            background_color = '#333'
+            font_size = 20
+            font_color = 'white'
 
         style = f'QWidget {{background: {background_color}; font-size: {font_size}px; color: {font_color};}}'
         self.setStyleSheet(style)

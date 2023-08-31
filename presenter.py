@@ -1,9 +1,11 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget
+from PyQt5.QtGui import QIcon
 from model import CalculatorModel
 from viewer import CalculatorView
 import sqlite3
 import logging
 from logging.handlers import TimedRotatingFileHandler
+import os
 
 class CalculatorPresenter:
     def __init__(self, model, view):
@@ -149,9 +151,17 @@ if __name__ == '__main__':
         We hope this guide helps you navigate the Calculator Application effectively. If you have questions, refer to this Help Section or the user manual.
     '''
 
+    icon_path = '/Users/hfast/Desktop/my_repo/calculator.png'
+
+    app.setWindowIcon(QIcon(icon_path))
+
+    logs_dir = '/Users/hfast/logs'
+    if not os.path.exists(logs_dir):
+        os.makedirs(logs_dir)
+
     view.init_help_window(help_text)
     logging.basicConfig(level=logging.INFO, handlers=[
-        TimedRotatingFileHandler('logs/logs', when='midnight', interval=1, backupCount=30)
+        TimedRotatingFileHandler(os.path.join(logs_dir, 'logs'), when='midnight', interval=1, backupCount=30)
     ], format='%(message)s_%(asctime)s', datefmt="%d-%m-%Y-%H-%M-%S")
     logger = logging.getLogger("actions")
     logger.info('Calculator is opened')
